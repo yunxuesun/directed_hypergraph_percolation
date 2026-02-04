@@ -1,1 +1,1 @@
-# hypergraph_percolation
+# directed_hypergraph_percolation
