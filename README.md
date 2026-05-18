@@ -17,7 +17,7 @@ To ensure computational efficiency and ease of use, the core simulations are wri
 │   ├── hypergraph.c     # Hypergraph topology generation, file I/O, and reverse mapping
 │   ├── percolation.c    # Core algorithms: Anchor assignment, Message-Passing, and Monte Carlo DFS
 │   └── main.c           # Main execution flow and memory cleanup
-├── data_processing/     # Directory for empirical network data processing
+├── data/     # Directory for empirical network data processing
 │   ├── iJO1366.mat               # Raw data for the E. coli metabolic network
 │   └── hypergraph_construction.m # MATLAB script to parse stoichiometric matrix
 ├── Makefile             # Automated compilation script
@@ -73,7 +73,7 @@ In this mode, the program generates a synthetic directed hypergraph from scratch
 In this mode, the program loads the genome-scale metabolic network of *E. coli* (iJO1366). Metabolites act as nodes, and biochemical reactions act as directed hyperedges.
 
 1. **Data Preprocessing (MATLAB):**
-   * Ensure `iJO1366.mat` and `hypergraph_construction.m` are located in the `data_processing/` directory.
+   * Ensure `iJO1366.mat` and `hypergraph_construction.m` are located in the `data/` directory.
    * Run the `hypergraph_construction.m` script in MATLAB.
    * The script parses the stoichiometric matrix, filters out self-loops, separates reactants/products, and generates the topology file `iJO1366_hypergraph.txt` required by the C code.
 2. **Configuration:** Open `src/globals.h` and turn on the real data mode:
