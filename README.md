@@ -66,7 +66,7 @@ In this mode, the program generates a synthetic directed hypergraph from scratch
 2. **Recompile:** Run `make` in your terminal.
 3. **Run & Analyze:**
    * **(Recommended)** Open `run.ipynb` and execute the cells sequentially. It will automatically run the C program, stream the progress, and plot the theoretical vs. numerical percolation curves into the `fig/` folder.
-   * **(CLI)** Alternatively, run `./percolation_sim` in your terminal. The data will be saved to `result/ph_data.txt`.
+   * **(CLI)** Alternatively, run `./percolation_sim` in your terminal. By default, the simulation saves the resulting data to `result/results.txt`. You can easily change this destination by modifying the `output_filename` variable located at the top of `src/globals.c`:
 
 ### Workflow B: Real Empirical Network Analysis
 
