@@ -3,7 +3,7 @@
 This repository contains the source code and analytical tools for the paper: 
 **"Directionality and node heterogeneity reshape criticality in hypergraph percolation"**. 
 
-The codebase implements a message-passing framework and Monte Carlo simulations to evaluate the emergence of the Hypergraph Giant In-Component (HGIN), Giant Out-Component (HGOUT), and Giant Strongly Connected Component (HGSCC) in directed hypergraphs with anchor nodes.
+The codebase implements a message-passing framework and Monte Carlo simulations to evaluate the emergence of the Hypergraph Giant Weakly Connected Component (HGWCC), Hypergraph Giant In-Component (HGIN), Giant Out-Component (HGOUT), and Giant Strongly Connected Component (HGSCC) in directed hypergraphs with anchor nodes.
 
 ## Repository Structure
 
