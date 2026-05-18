@@ -7,20 +7,24 @@ The codebase implements a message-passing framework and Monte Carlo simulations 
 
 ## Repository Structure
 
-To ensure computational efficiency and ease of use, the core simulations are written in modularized **C**, while data processing, pipeline automation, and visualization are handled in **Python**.
+To ensure computational efficiency and ease of use, the core simulations are written in modularized **C**, while data processing, pipeline automation, and visualization are handled in **Python** and **MATLAB**.
 
 ```text
 .
 ├── src/
-│   ├── globals.h                # Global variable declarations, macros, and function prototypes
-│   ├── globals.c                # Global variable definitions and memory allocations
-│   ├── hypergraph.c             # Hypergraph topology generation, file I/O, and reverse mapping
-│   ├── percolation.c            # Core algorithms: Anchor assignment, Message-Passing, and Monte Carlo SCC/DFS
-│   └── main.c                   # Main execution flow and memory cleanup
-├── Makefile                     # Automated compilation script
-├── result/                      # Directory for output data (created automatically during runtime)
-├── README.md                    # This documentation
-└── Analysis_and_Plotting.ipynb  # End-to-end Python pipeline (Compile -> Run -> Plot)
+│   ├── globals.h        # Global variable declarations, macros, and configuration parameters
+│   ├── globals.c        # Global variable definitions and memory allocations
+│   ├── hypergraph.c     # Hypergraph topology generation, file I/O, and reverse mapping
+│   ├── percolation.c    # Core algorithms: Anchor assignment, Message-Passing, and Monte Carlo DFS
+│   └── main.c           # Main execution flow and memory cleanup
+├── data_processing/     # Directory for empirical network data processing
+│   ├── iJO1366.mat               # Raw data for the E. coli metabolic network
+│   └── hypergraph_construction.m # MATLAB script to parse stoichiometric matrix
+├── Makefile             # Automated compilation script
+├── result/              # Directory for output data (created automatically during runtime)
+├── fig/                 # Directory for generated plots (created automatically during runtime)
+├── README.md            # This documentation
+└── run.ipynb            # End-to-end Python pipeline (Compile -> Run -> Plot)
 ```
 
 ## Prerequisites
@@ -28,10 +32,11 @@ To ensure computational efficiency and ease of use, the core simulations are wri
 To compile and run the code, you will need the following installed on your system:
 
 1. **C Compiler:** GCC (GNU Compiler Collection) or any standard C99 compatible compiler.
-2. **Python 3.x:** With the following packages installed:
+2. **Python 3.x:** With the following scientific packages installed:
    ```bash
    pip install jupyter pandas matplotlib numpy
    ```
+3. **MATLAB (Optional):** Only required if you intend to process empirical network data (e.g., `.mat` files).
 
 ## Installation and Compilation
 
@@ -47,35 +52,47 @@ If successful, this will generate an executable file named `percolation_sim` in 
 
 ## Usage
 
-### Option 1: End-to-End Analysis Pipeline (Recommended)
+This simulator supports two independent workflows: **Synthetic Network Modeling** and **Real Empirical Network Analysis**. You can easily switch between them by toggling the `USE_REAL_DATA` macro in `src/globals.h`.
 
-For the easiest experience and to perfectly reproduce the analysis workflow shown in the paper, we provide an interactive Jupyter Notebook. 
+### Workflow A: Synthetic Network Modeling
 
-Open **`Analysis_and_Plotting.ipynb`**. This notebook acts as an automated pipeline:
-1. It automatically triggers the `Makefile` to compile the C source code.
-2. It executes the simulation (`./percolation_sim`) and streams the progress.
-3. It loads the generated simulation data from `result/ph_data.txt`.
-4. It plots the theoretical (Message-Passing) vs. numerical (Monte Carlo) percolation curves side-by-side.
+In this mode, the program generates a synthetic directed hypergraph from scratch based on your predefined structural parameters.
 
-### Option 2: Manual Command-Line Execution
-
-If you prefer to run the simulation manually or integrate it into bash scripts:
-
-1. Ensure the code is compiled using `make`.
-2. Create the result directory (if it doesn't exist):
-   ```bash
-   mkdir -p result
+1. **Configuration:** Open `src/globals.h` and ensure the real data mode is turned off:
+   ```c
+   #define USE_REAL_DATA 0
    ```
-3. Run the executable:
-   ```bash
-   ./percolation_sim
+   *(You can also adjust the synthetic graph scale `N_SYNTHETIC`, `Q_SYNTHETIC` and average cardinalities `M_IN_SYNTHETIC`, `M_OUT_SYNTHETIC` here).*
+2. **Recompile:** Run `make` in your terminal.
+3. **Run & Analyze:**
+   * **(Recommended)** Open `run.ipynb` and execute the cells sequentially. It will automatically run the C program, stream the progress, and plot the theoretical vs. numerical percolation curves into the `fig/` folder.
+   * **(CLI)** Alternatively, run `./percolation_sim` in your terminal. The data will be saved to `result/ph_data.txt`.
+
+### Workflow B: Real Empirical Network Analysis
+
+In this mode, the program loads the genome-scale metabolic network of *E. coli* (iJO1366). Metabolites act as nodes, and biochemical reactions act as directed hyperedges.
+
+1. **Data Preprocessing (MATLAB):**
+   * Ensure `iJO1366.mat` and `hypergraph_construction.m` are located in the `data_processing/` directory.
+   * Run the `hypergraph_construction.m` script in MATLAB.
+   * The script parses the stoichiometric matrix, filters out self-loops, separates reactants/products, and generates the topology file `iJO1366_hypergraph.txt` required by the C code.
+2. **Configuration:** Open `src/globals.h` and turn on the real data mode:
+   ```c
+   #define USE_REAL_DATA 1
    ```
-4. The simulation progress will be printed to the terminal, and the final data will be saved to `result/ph_data.txt`. You can then process this CSV-formatted text file with your preferred tools.
+   *(Note: The empirical $N$ and $Q$ will be read directly from the parsed text file, overriding any synthetic size macros).*
+3. **Recompile:** Run `make` in your terminal.
+4. **Run & Analyze:**
+   * Use `run.ipynb` for the automated end-to-end pipeline, or execute `./percolation_sim` directly in the terminal.
 
-## Configuration
+## Advanced Configuration
 
-You can adjust the simulation parameters (e.g., synthetic network size, anchor probabilities, Monte Carlo runs) by modifying the macros defined at the top of `src/globals.h`. After making any changes, simply re-run the Jupyter Notebook or use `make` to recompile.
+You can configure various physical parameters and percolation sweep settings by modifying the macros defined at the top of `src/globals.h`:
 
-- `USE_REAL_DATA`: Toggle between synthetic hypergraph generation (`0`) and loading empirical networks (`1`).
-- `SET_ALL_INPUTS_AS_ANCHORS`: Toggle the biologically-motivated asymmetric anchor mode (`1`) vs. purely random anchor assignment (`0`).
-- `THETA`: The probability of a node acting as an anchor (used when random assignment is active).
+* `ANCHOR_SELECTION_MODE`: Defines the candidate pool for anchor nodes. Options include `ANCHOR_MODE_INPUT` (1), `ANCHOR_MODE_OUTPUT` (2), or `ANCHOR_MODE_GLOBAL` (3).
+* `THETA`: The probability of a candidate node acting as an anchor.
+* `SWEEP_MODE`: Determines how percolation parameters are varied during the simulation:
+    * `1`: Sweep node retention probability (p_N), keep hyperedge probability fixed (`FIXED_P_H`).
+    * `2`: Sweep hyperedge retention probability (p_H), keep node probability fixed (`FIXED_P_N`).
+    * `3`: Sweep both parameters simultaneously (p_N = p_H).
+* `MONTE_CARLO_RUNS`: The number of independent iterations for numerical averaging to eliminate finite-size random fluctuations.
