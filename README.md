@@ -80,7 +80,7 @@ In this mode, the program loads the genome-scale metabolic network of *E. coli* 
    ```c
    #define USE_REAL_DATA 1
    ```
-   *(Note: The empirical $N$ and $Q$ will be read directly from the parsed text file, overriding any synthetic size macros).*
+   (Note: The empirical $N$ and $Q$ will be read directly from the parsed text file, overriding any synthetic size macros).
 3. **Recompile:** Run `make` in your terminal.
 4. **Run & Analyze:**
    * Use `run.ipynb` for the automated end-to-end pipeline, or execute `./percolation_sim` directly in the terminal.
