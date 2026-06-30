@@ -202,7 +202,6 @@ void generate_synthetic_hypergraph(int topo_mode, double lam, double gamma) {
         }
     }
 
-    // 计算实际的 k_in 和 k_out
     k_in = calloc(N, sizeof(int));
     k_out = calloc(N, sizeof(int));
     for (int mu = 0; mu < Q; mu++) {
@@ -257,19 +256,18 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // 防止在短时间内密集调用时产生相同种子
     struct timespec ts;
     timespec_get(&ts, TIME_UTC);
     srand((unsigned)(ts.tv_nsec ^ ts.tv_sec));
 
     generate_synthetic_sequences(topo, lam, gamma);
 
-    // 格式化输出到 stdout 给 Python 读取
+
     printf("%d %d\n", N, Q);
     for(int i = 0; i < N; i++) printf("%d %d\n", k_in[i], k_out[i]);
     for(int mu = 0; mu < Q; mu++) printf("%d %d\n", size_T[mu], size_H[mu]);
 
-    // 释放内存
+
     free(size_T); free(size_H);
     free(k_in); free(k_out);
     
