@@ -88,8 +88,8 @@ In this mode, the program loads the genome-scale metabolic network of *E. coli* 
 
 The final two notebook cells provide optional figure-generation workflows:
 
-* `Figure1(1)_giant_component.pdf`: compares Poisson and scale-free topologies under correlated and uncorrelated settings when the four expected result files are available in `result/`.
-* `Figure2(1)_delta_pc.pdf`: calls `seq_generator` to sample realized degree/cardinality sequences and estimate the directed-versus-undirected critical threshold gap across anchor fractions. The notebook uses `N_SEQUENCE_SAMPLE = 2000` for interactive runtime; increase this value for larger samples.
+* `Figure_giant_component.pdf`: compares Poisson and scale-free topologies under correlated and uncorrelated settings when the four expected result files are available in `result/`.
+* `Figure_delta_pc.pdf`: calls `seq_generator` to sample realized degree/cardinality sequences and estimate the directed-versus-undirected critical threshold gap across anchor fractions. The notebook uses `N_SEQUENCE_SAMPLE = 2000` for interactive runtime; increase this value for larger samples.
 
 `seq_generator` can also be called directly:
 
