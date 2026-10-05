@@ -5,7 +5,7 @@ disp(['Successfully loaded file: ', file_name]);
 disp('------------------------------');
 
 if exist('Model', 'var')
-    stoichiometric_matrix = Model.US;
+    stoichiometric_matrix = Model.S;
     [num_nodes, num_total_reactions] = size(stoichiometric_matrix);
     
     fprintf('Parsing directed hypergraph from stoichiometric matrix...\n');

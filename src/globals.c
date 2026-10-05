@@ -1,6 +1,6 @@
 #include "globals.h"
 
-const char* HYPERGRAPH_FILE_PATH = "./data_processing/iJO1366_hypergraph.txt";
+const char* HYPERGRAPH_FILE_PATH = "./data/iJO1366_hypergraph.txt";
 const char* output_filename = "result/ph_data.txt";
 
 int N; 

@@ -1,7 +1,7 @@
 # iJO1366 directed-hypergraph construction
 
 `hypergraph_construction.py` is an open-source Python replacement for
-`hypergraph_construction.m`.  It reads the stoichiometric matrix `Model.US`
+`hypergraph_construction.m`.  It reads the stoichiometric matrix `Model.S`
 from `iJO1366.mat` and writes the directed-hypergraph format used by the
 accompanying C implementation.
 
@@ -23,7 +23,7 @@ python hypergraph_construction.py
 ```
 
 The command writes `iJO1366_hypergraph.txt`.  The output contains 1805 nodes
-and 3479 directed hyperedges and reproduces the supplied file.  To keep the
+and 2253 directed hyperedges and reproduces the supplied file.  To keep the
 existing file unchanged while testing, choose a different output path:
 
 ```bash

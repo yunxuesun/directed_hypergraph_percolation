@@ -19,7 +19,10 @@ To ensure computational efficiency and ease of use, the core simulations are wri
 |   `-- main.c           # Main execution flow and memory cleanup
 |-- data/                # Directory for empirical network data processing
 |   |-- iJO1366.mat               # Raw data for the E. coli metabolic network
-|   `-- hypergraph_construction.m # MATLAB script to parse stoichiometric matrix
+|   |-- hypergraph_construction.py # Python script to parse stoichiometric matrix
+|   |-- requirements.txt           # Python dependencies for data preprocessing
+|   |-- README.md                  # Data-preprocessing instructions
+|   `-- hypergraph_construction.m  # Legacy MATLAB implementation
 |-- seq_generator.c      # Auxiliary C generator for degree/cardinality sequences
 |-- Makefile             # Automated compilation script
 |-- result/              # Directory for output data (created automatically during runtime)
@@ -37,7 +40,7 @@ To compile and run the code, you will need the following installed on your syste
    ```bash
    pip install jupyter pandas matplotlib numpy scipy
    ```
-3. **MATLAB (Optional):** Only required if you intend to process empirical network data (e.g., `.mat` files).
+3. **MATLAB (Optional):** The legacy MATLAB preprocessing script is retained for reference. The empirical network can be processed entirely with the open-source Python workflow described below.
 
 ## Installation and Compilation
 
@@ -72,10 +75,11 @@ In this mode, the program generates a synthetic directed hypergraph from scratch
 
 In this mode, the program loads the genome-scale metabolic network of *E. coli* (iJO1366). Metabolites act as nodes, and biochemical reactions act as directed hyperedges.
 
-1. **Data preprocessing (MATLAB):**
-   * Ensure `iJO1366.mat` and `hypergraph_construction.m` are located in the `data/` directory.
-   * Run the `hypergraph_construction.m` script in MATLAB.
-   * The script parses the stoichiometric matrix, filters self-loops, separates reactants/products, and generates the topology file required by the C code.
+1. **Data preprocessing (Python):**
+   * Install the open-source dependencies with `python -m pip install -r data/requirements.txt`.
+   * Run `python data/hypergraph_construction.py` from the repository root.
+   * The script parses `Model.S` in `iJO1366.mat`, filters reactions without both substrates and products, and generates `data/iJO1366_hypergraph.txt` for the C code. It reproduces a hypergraph with 1805 nodes and 2253 directed hyperedges.
+   * The legacy MATLAB script is retained in `data/hypergraph_construction.m` for reference.
 2. **Configuration:** Open `src/globals.h` and turn on real data mode:
    ```c
    #define USE_REAL_DATA 1

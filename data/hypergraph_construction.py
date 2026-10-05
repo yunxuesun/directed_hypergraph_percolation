@@ -2,7 +2,7 @@
 """Construct the directed iJO1366 hypergraph from the supplied MATLAB model.
 
 This is an open-source Python replacement for ``hypergraph_construction.m``.
-For each reaction (a column of ``Model.US``), metabolites with negative
+For each reaction (a column of ``Model.S``), metabolites with negative
 stoichiometric coefficients are treated as input nodes and metabolites with
 positive coefficients as output nodes.  Reactions without both types of node,
 or with a node on both sides, are excluded.  Node identifiers in the output
@@ -23,15 +23,15 @@ SCRIPT_DIRECTORY = Path(__file__).resolve().parent
 
 
 def load_stoichiometric_matrix(input_path: Path):
-    """Load ``Model.US`` from a MATLAB v5 MAT file."""
+    """Load ``Model.S`` from a MATLAB v5 MAT file."""
     contents = io.loadmat(input_path, struct_as_record=False, squeeze_me=True)
     if "Model" not in contents:
         raise KeyError("The input MAT file does not contain a 'Model' variable.")
 
     model = contents["Model"]
-    if not hasattr(model, "US"):
-        raise KeyError("The 'Model' variable does not contain a 'US' matrix.")
-    return model.US
+    if not hasattr(model, "S"):
+        raise KeyError("The 'Model' variable does not contain an 'S' matrix.")
+    return model.S
 
 
 def directed_hyperedges(stoichiometric_matrix) -> Iterator[tuple[np.ndarray, np.ndarray]]:
@@ -56,9 +56,8 @@ def write_hypergraph(output_path: Path, num_nodes: int, hyperedges: list[tuple[n
         output_file.write(f"{num_nodes} {len(hyperedges)}\n")
         for input_nodes, output_nodes in hyperedges:
             output_file.write(f"{input_nodes.size} {output_nodes.size}\n")
-            # The trailing space intentionally matches the original MATLAB output.
-            output_file.write(" ".join(map(str, input_nodes)) + " \n")
-            output_file.write(" ".join(map(str, output_nodes)) + " \n")
+            output_file.write(" ".join(map(str, input_nodes)) + "\n")
+            output_file.write(" ".join(map(str, output_nodes)) + "\n")
 
 
 def parse_arguments() -> argparse.Namespace:
